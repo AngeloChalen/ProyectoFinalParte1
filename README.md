@@ -80,7 +80,7 @@ echo 'export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:/home/israel/go2_ws/src/unitre
 ```
 
 
-
+Change the `<your_user>` part to your username.
 
 ## 4. Run the gazebo in factory map
 
@@ -93,7 +93,8 @@ ros2 launch go2_config gazebo.launch.py world:=factory
 
 ```
 
-Change the `<your_user>` part to your username.
+<img width="1850" height="1053" alt="Screenshot from 2025-12-22 22-11-50" src="https://github.com/user-attachments/assets/b01bac03-87a5-4777-ba94-e691a3091d9c" />
+
 
 
 ## 5. Execute the launch file that utilizes the slam_toolbox package
