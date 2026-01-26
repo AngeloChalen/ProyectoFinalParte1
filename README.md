@@ -66,6 +66,8 @@ ros2 launch go2_config gazebo.launch.py world:=factory
 Para generar el mapa de ocupación, utilizamos SLAM. Abre una **nueva terminal** y ejecuta:
 
 ```bash
+cd ~/go2_ws
+source install/setup.bash
 ros2 launch go2_config slam.launch.py use_sim_time:=true
 
 ```
