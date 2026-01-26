@@ -112,7 +112,6 @@ Los mapas de SLAM suelen tener "ruido". Para limpiarlo:
 
 ## 5. Paso 4: Planificación de Rutas (LPA*)
 
-Ejecutamos el nodo de planificación global. Se requiere abrir **4 terminales** simultáneas (recuerda hacer `source install/setup.bash` en cada una).
 
 ### Terminal 1: Servidor del Mapa
 
@@ -133,8 +132,12 @@ Activa el mapa y carga la descripción visual del robot.
 # Activar el mapa
 ros2 lifecycle set /map_server configure
 ros2 lifecycle set /map_server activate
+#Debe salir Transitioning successfull
 
 # Cargar modelo del robot
+cd ~/go2_ws
+colcon build --packages-select go2_description
+source install/setup.bash
 ros2 launch go2_description description.launch.py &
 ros2 run joint_state_publisher joint_state_publisher
 
@@ -145,9 +148,9 @@ ros2 run joint_state_publisher joint_state_publisher
 Ejecuta el script de inteligencia artificial que calcula la ruta.
 
 ```bash
-cd ~/go2_ws/src/
-python3 lpa_planner_node.py
-
+cd ~/go2_ws
+source install/setup.bash
+python3 src/unitree-go2-ros2/lpa_planner_node.py
 ```
 
 ### Terminal 4: Visualización (RViz)
@@ -166,6 +169,31 @@ ros2 run rviz2 rviz2 -d ~/go2_ws/src/go2_config/rviz/go2_lpa.rviz
 > ```
 > 
 > 
+## Configuracion RVIZ2
+### 1️⃣ Configuración Global (Global Options)
+Esto es lo primero que debes revisar en el panel izquierdo (Displays):
+* Busca Global Options.
+* Fixed Frame: Escribe o selecciona map.
+### 2️⃣ Agregar el Mapa (Factory2)
+Para ver las paredes negras y el suelo gris:
+1. Haz clic en el botón Add (abajo a la izquierda).
+2. Busca la pestaña By Topic.
+3. Busca `map` y selecciona Map.
+4. Clic en OK.
+5. (Importante) Si no ves el mapa, despliega las opciones de "Map" en el panel izquierdo y busca Durability Policy. Cámbialo a `Transient Local`.
+### 3️⃣ Agregar el Robot (Unitree Go2)
+Para ver al perro gris en 3D (y no un cubo o nada):
+1. Clic en Add.
+2. Pestaña **By Display Type** -> Selecciona RobotModel.
+3. Clic en OK.
+4. En el panel izquierdo, dentro de las opciones de RobotModel:
+* * **Description Topic:** Asegúrate de que esté seleccionado `robot_description`.
+### 4️⃣ Agregar la Ruta (La Línea Verde)
+Para cumplir con el punto de "Path Visible" de la rúbrica:
+1. Clic en Add.
+2. Pestaña By Topic.
+3. Busca `/plan` y selecciona Path.
+4. Clic en OK.
 
 ### 🎯 Prueba de Planificación
 
