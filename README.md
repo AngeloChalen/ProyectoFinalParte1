@@ -302,6 +302,10 @@ Para cumplir con el punto de "Path Visible" de la rúbrica:
 3. El algoritmo calculará la trayectoria y dibujará una línea (Path) conectando al robot con el objetivo.
 
 
+### Demostración de movimiento de CUADRUPEDO mapeo
+Haga clic en la imagen para ver el video completo en YouTube:
+[![Video de Simulación Go2](https://img.youtube.com/vi/MYDZ2EgiQFA/0.jpg)]([https://youtu.be/dFn0udzOmLs](https://youtu.be/sOy21uL0iJc))
+
 
 ### Demostración de movimiento de CUADRUPEDO planificacion + Controlador
 Haga clic en la imagen para ver el video completo en YouTube:
