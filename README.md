@@ -145,8 +145,8 @@ ros2 run joint_state_publisher joint_state_publisher
 Ejecuta el script de inteligencia artificial que calcula la ruta.
 
 ```bash
-cd ~/go2_ws/src/go2_config/scripts
-python3 lpa_planner.py
+cd ~/go2_ws/src/
+python3 lpa_planner_node.py
 
 ```
 
