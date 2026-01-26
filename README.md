@@ -1,5 +1,4 @@
 
-```markdown
 # 🤖 Planificación de Trayectorias LPA* para Unitree Go2 en ROS 2
 
 Este repositorio contiene la implementación de un sistema de navegación autónoma para el robot cuadrúpedo **Unitree Go2**. El proyecto abarca desde la simulación en entornos industriales (Gazebo) y generación de mapas (SLAM), hasta la planificación de rutas óptimas utilizando el algoritmo **LPA* (Lifelong Planning A*)**.
@@ -12,7 +11,7 @@ Este repositorio contiene la implementación de un sistema de navegación autón
 5. [Paso 4: Planificación de Rutas (LPA*)](#5-paso-4-planificación-de-rutas-lpa)
 6. [Estructura del Proyecto](#6-estructura-del-proyecto)
 
----
+
 
 ## 1. Requisitos e Instalación
 
@@ -162,13 +161,7 @@ ros2 run rviz2 rviz2 -d ~/go2_ws/src/go2_config/rviz/go2_lpa.rviz
 
 ```
 
-> **Nota:** Si el robot no aparece en el mapa, abre una 5ta terminal y ejecuta este comando para fijarlo al suelo:
-> ```bash
-> ros2 run tf2_ros static_transform_publisher --x -9.0 --y -13.0 --z 0.2 --yaw 0 --pitch 0 --roll 0 --frame-id map --child-frame-id base_link
-> 
-> ```
-> 
-> 
+
 ## Configuracion RVIZ2
 ### 1️⃣ Configuración Global (Global Options)
 Esto es lo primero que debes revisar en el panel izquierdo (Displays):
@@ -203,26 +196,121 @@ Para cumplir con el punto de "Path Visible" de la rúbrica:
 
 ---
 
-## 6. Estructura del Proyecto
 
-El repositorio sigue la estructura estándar de ROS 2:
 
-```text
-~/go2_ws/src/go2_config/
-├── launch/
-│   ├── gazebo.launch.py
-│   └── slam.launch.py
-├── maps/
-│   ├── mapa_fabrica.yaml
-│   └── mapa_fabrica.png
-├── scripts/
-│   └── lpa_planner.py      <-- Algoritmo LPA*
-├── rviz/
-│   └── go2_lpa.rviz        <-- Configuración visual
-├── CMakeLists.txt
-└── package.xml
+# PARTE 2 PROYECTO FINAL
 
-```
+
+## 🚀 Proyecto de Navegación Autónoma: Unitree Go2 en Entorno Industrial
+Este repositorio contiene la solución técnica para la navegación autónoma del robot cuadrúpedo **Unitree Go2** en un entorno de fábrica simulado en **ROS 2 Humble**.
+
+### 🧠 Descripción del Sistema
+El sistema se basa en una arquitectura de planificación y control desacoplada, optimizada para entornos con obstáculos densos:
+
+1. **Planificador Global (LPA*):** Implementa el algoritmo Lifelong Planning A* en el nodo `lpa_planner_node.py`.
+  * **Capa de Inflación:** Se configuró un margen de seguridad de 6 celdas para evitar colisiones físicas en Gazebo basándose exclusivamente en el mapa lógico `.pgm`.
+  * **Evidencia CSV (Pure Pursuit):** Genera automáticamente un archivo con los waypoints de la ruta en la carpeta `~/go2_ws`.
+
+2. **Controlador Local (Pure Pursuit):** Ejecutado en el nodo `pure_pursuit_node.py`, encargado del seguimiento de trayectoria con alta fidelidad.
+   * **Métrica de Precisión:** álculo de distancia euclidiana directa desde el punto de origen (`2D Pose Estimate`) para garantizar exactitud de 10m o 15m.
+   * **Monitoreo:** Incluye un cronómetro de tiempo real y publicación de rastro visual en el tópico `/drive_path`.
+
+### 🛠️ Requisitos de Software
+* Ubuntu 22.04 con ROS 2 Humble.
+* Simulador Gazebo Classic.
+* Visualizador RViz2.
+
+## 🚦 Guía de Ejecución Rápida
+Siga este orden en terminales independientes para inicializar el sistema:
+1. Terminal 1:Inicializar Simulación Gazebo
+   ```bash
+   cd ~/go2_ws
+   colcon build
+   source install/setup.bash
+   ros2 launch go2_config gazebo.launch.py world:=factory
+   ```
+2. Terminal 2: Cargar Mapa de Navegación y el modelo del robot
+   ```bash
+   ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=/home/$USER/go2_ws/mapeos/mapa_fabrica.yaml
+   ```
+   Terminal 3:
+   ```
+   ros2 lifecycle set /map_server configure
+   ros2 lifecycle set /map_server activate
+   #debe salir Transitioning successfull
+
+   #luego 
+   # Cargar modelo del robot
+   cd ~/go2_ws
+   colcon build --packages-select go2_description
+   source install/setup.bash
+   # Cargar modelo del robot
+   ros2 launch go2_description description.launch.py &
+   ros2 run joint_state_publisher joint_state_publisher
+
+   
+   ```
+4. Ejecutar Planificador de trayectoria y control
+   ### Terminal 4: Planificación Global
+   ```bash
+   cd ~/go2_ws
+   source install/setup.bash
+   python3 src/unitree-go2-ros2/lpa_planner_node.py
+
+   ```
+   ### Terminal 5: Control y Métricas
+   ```bash
+   cd ~/go2_ws
+   source install/setup.bash
+   python3 src/unitree-go2-ros2/pure_pursuit_node.py
+   ```
+
+5. terminal 6 : Visualización y Pruebas en Rviz
+   ```bash
+   ros2 run rviz2 rviz2 -d ~/go2_ws/src/go2_config/rviz/go2_lpa.rviz
+   ```
+## Configuracion RVIZ2
+### 1️⃣ Configuración Global (Global Options)
+Esto es lo primero que debes revisar en el panel izquierdo (Displays):
+* Busca Global Options.
+* Fixed Frame: Escribe o selecciona map.
+### 2️⃣ Agregar el Mapa (Factory2)
+Para ver las paredes negras y el suelo gris:
+1. Haz clic en el botón Add (abajo a la izquierda).
+2. Busca la pestaña By Topic.
+3. Busca `map` y selecciona Map.
+4. Clic en OK.
+5. (Importante) Si no ves el mapa, despliega las opciones de "Map" en el panel izquierdo y busca Durability Policy. Cámbialo a `Transient Local`.
+### 3️⃣ Agregar el Robot (Unitree Go2)
+Para ver al perro gris en 3D (y no un cubo o nada):
+1. Clic en Add.
+2. Pestaña **By Display Type** -> Selecciona RobotModel.
+3. Clic en OK.
+4. En el panel izquierdo, dentro de las opciones de RobotModel:
+* * **Description Topic:** Asegúrate de que esté seleccionado `robot_description`.
+### 4️⃣ Agregar la Ruta (La Línea Verde)
+Para cumplir con el punto de "Path Visible" de la rúbrica:
+1. Clic en Add.
+2. Pestaña By Topic.
+3. Busca `/plan` y selecciona Path.
+4. Clic en OK.
+
+### 🎯 Prueba de Planificación
+
+1. En RViz, selecciona la herramienta **"2D Goal Pose"** (flecha verde superior).
+2. Haz clic en un punto libre del mapa.
+3. El algoritmo calculará la trayectoria y dibujará una línea (Path) conectando al robot con el objetivo.
+
+
+### Demostración de movimiento de CUADRUPEDO
+Haga clic en la imagen para ver el video completo en YouTube:
+[![Video de Simulación Go2](https://img.youtube.com/vi/fsc-4-Z6S-w/0.jpg)](https://www.youtube.com/watch?v=fsc-4-Z6S-w)
+
+
+### Demostración de movimiento de CUADRUPEDO planificacion + Controlador
+Haga clic en la imagen para ver el video completo en YouTube:
+[![Video de Simulación Go2](https://img.youtube.com/vi/MYDZ2EgiQFA/0.jpg)](https://www.youtube.com/watch?v=MYDZ2EgiQFA)
+
 
 ---
 
