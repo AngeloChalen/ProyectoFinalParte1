@@ -119,7 +119,7 @@ Ejecutamos el nodo de planificación global. Se requiere abrir **4 terminales** 
 Carga el mapa estático que editamos previamente.
 
 ```bash
-ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=/home/$USER/go2_ws/src/go2_config/maps/mapa_fabrica.yaml
+ros2 run nav2_map_server map_server --ros-args -p yaml_filename:=/home/$USER/go2_ws/mapeos/mapa_fabrica.yaml
 
 ```
 
