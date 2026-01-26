@@ -92,7 +92,7 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 Una vez que el mapa en RViz se vea completo, guárdalo ejecutando:
 
 ```bash
-cd ~/go2_ws/src/go2_config/maps/
+cd ~/go2_ws/mapeos/
 ros2 run nav2_map_server map_saver_cli -f mapa_fabrica
 
 ```
