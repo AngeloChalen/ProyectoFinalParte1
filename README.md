@@ -304,9 +304,9 @@ Para cumplir con el punto de "Path Visible" de la rúbrica:
 
 ### Demostración de movimiento de CUADRUPEDO mapeo
 Haga clic en la imagen para ver el video completo en YouTube:
-[![Video de Simulación Go2](https://img.youtube.com/vi/MYDZ2EgiQFA/0.jpg)]([https://youtu.be/dFn0udzOmLs](https://youtu.be/sOy21uL0iJc))
+[![Video de Simulación Go2](https://img.youtube.com/vi/MYDZ2EgiQFA/0.jpg)](https://youtu.be/sOy21uL0iJc)
 
-
+https://youtu.be/sOy21uL0iJc
 ### Demostración de movimiento de CUADRUPEDO planificacion + Controlador
 Haga clic en la imagen para ver el video completo en YouTube:
 [![Video de Simulación Go2](https://img.youtube.com/vi/MYDZ2EgiQFA/0.jpg)](https://youtu.be/dFn0udzOmLs)
